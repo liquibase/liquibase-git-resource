@@ -1,14 +1,9 @@
 package org.liquibase.ext.resource.git;
 
-import com.datical.liquibase.ext.resource.ProAbstractPathHandler;
 import liquibase.Scope;
 import liquibase.resource.*;
-import liquibase.util.FileUtil;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.TransportException;
-import org.eclipse.jgit.util.FileUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,6 +12,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GitPathHandler extends AbstractPathHandler {
 
@@ -34,7 +31,10 @@ public class GitPathHandler extends AbstractPathHandler {
     }
 
     private boolean isGitPathValid(String root) {
-        return root.contains(".git");
+        // https://www.debuggex.com/r/H4kRw1G0YPyBFjfm
+        Pattern pattern = Pattern.compile("((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)(/)?");
+        Matcher matcher = pattern.matcher(root);
+        return matcher.find();
     }
 
     @Override
