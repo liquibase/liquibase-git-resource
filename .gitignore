@@ -13,3 +13,5 @@ buildNumber.properties
 liquibase_libs
 .idea
 liquibase.properties
+.tmp
+liquibase.json
