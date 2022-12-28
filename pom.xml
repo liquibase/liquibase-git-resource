@@ -3,8 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.example</groupId>
-    <artifactId>my-extension</artifactId>
+    <groupId>org.liquibase.ext</groupId>
+    <artifactId>git-extension</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
@@ -17,15 +17,14 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>4.7.1</version>
-            <scope>system</scope>
-            <systemPath>/Users/mcred/projects/liquibase/git-remote-resource-extension/libs/liquibase-0-SNAPSHOT.jar</systemPath>
+            <version>4.18.0</version>
+<!--            <scope>provided</scope>-->
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>6.0.0.202111291000-r</version>
+            <version>6.4.0.202211300538-r</version>
         </dependency>
 
     </dependencies>
