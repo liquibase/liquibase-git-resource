@@ -39,7 +39,7 @@ public class GitPathHandler extends AbstractPathHandler {
 
     @Override
     public ResourceAccessor getResourceAccessor(String root) throws IOException, FileNotFoundException {
-        if (root != null) {
+        if (root != null && isGitPathValid(root)) {
             File tmp = new File(".tmp");
             if (!tmp.exists()){
                 tmp.mkdirs();
@@ -54,7 +54,7 @@ public class GitPathHandler extends AbstractPathHandler {
             Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Return DirectoryResourceAccessor for root path " + tmp);
             return new DirectoryResourceAccessor(tmp);
         }
-        throw new FileNotFoundException("Unable to locate temp directory for git repository");
+        throw new FileNotFoundException("Unable to locate git repository: " + root);
     }
 
     @Override
