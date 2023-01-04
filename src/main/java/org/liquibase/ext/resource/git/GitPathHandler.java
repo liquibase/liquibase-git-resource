@@ -46,7 +46,10 @@ public class GitPathHandler extends AbstractPathHandler {
         //todo ensure exception breaks workflow instead of being severe only
         if (root != null && isGitPathValid(root)) {
             File path = new File(GitConfiguration.GIT_PATH.getCurrentValue());
-            this.registerShutdown(path);
+            Boolean cleanup = GitConfiguration.GIT_CLEANUP.getCurrentValue();
+            if (cleanup) {
+                this.registerShutdown(path);
+            }
             if (!path.exists()){
                 path.mkdirs();
                 try {
