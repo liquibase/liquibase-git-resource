@@ -2,8 +2,10 @@ package org.liquibase.ext.resource.git;
 
 import liquibase.Scope;
 import liquibase.resource.*;
+import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +14,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,21 +41,22 @@ public class GitPathHandler extends AbstractPathHandler {
     }
 
     @Override
-    public ResourceAccessor getResourceAccessor(String root) throws IOException, FileNotFoundException {
+    public ResourceAccessor getResourceAccessor(String root) throws IOException {
         if (root != null && isGitPathValid(root)) {
-            File tmp = new File(".tmp");
-            if (!tmp.exists()){
-                tmp.mkdirs();
+            File path = new File(GitConfiguration.GIT_PATH.getCurrentValue());
+            if (!path.exists()){
+                path.mkdirs();
                 try {
-                    Git.cloneRepository().setURI(root).setDirectory(tmp).call();
+                    CloneCommand cloneCommand = this.getCloneCommand(root, path);
+                    cloneCommand.call();
                 } catch (GitAPIException e) {
                     throw new IOException("Unable to clone repository: " + root);
                 }
             } else {
-                Git.open(tmp).pull();
+                Git.open(path).pull();
             }
-            Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Return DirectoryResourceAccessor for root path " + tmp);
-            return new DirectoryResourceAccessor(tmp);
+            Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Return DirectoryResourceAccessor for root path " + path);
+            return new DirectoryResourceAccessor(path);
         }
         throw new FileNotFoundException("Unable to locate git repository: " + root);
     }
@@ -65,5 +69,32 @@ public class GitPathHandler extends AbstractPathHandler {
     @Override
     public OutputStream createResource(String path) throws IOException {
         return Files.newOutputStream(Paths.get(path), StandardOpenOption.CREATE_NEW);
+    }
+
+    private boolean hasGitCredentials(String username, String password) throws IOException {
+        if ((username != "" && Objects.equals(password, "")) || (Objects.equals(username, "") && password !=  "")) {
+            throw new IOException("Username and Password are both required for Git Credentials.");
+        }
+        if (username == null && password == null) {
+            return false;
+        }
+        return true;
+    }
+
+    private CloneCommand getCloneCommand(String root, File path) throws IOException {
+        String username = GitConfiguration.GIT_USERNAME.getCurrentValue();
+        String password = GitConfiguration.GIT_PASSWORD.getCurrentValue();
+        String branch = GitConfiguration.GIT_BRANCH.getCurrentValue();
+
+        CloneCommand cloneCommand = Git.cloneRepository().setURI(root);
+        cloneCommand.setDirectory(path);
+        if (this.hasGitCredentials(username, password)) {
+            cloneCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password));
+        }
+        if (branch != null && branch != "") {
+            cloneCommand.setBranch(branch);
+        }
+
+        return cloneCommand;
     }
 }
