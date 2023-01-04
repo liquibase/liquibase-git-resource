@@ -6,6 +6,7 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,15 +43,17 @@ public class GitPathHandler extends AbstractPathHandler {
 
     @Override
     public ResourceAccessor getResourceAccessor(String root) throws IOException {
+        //todo ensure exception breaks workflow instead of being severe only
         if (root != null && isGitPathValid(root)) {
             File path = new File(GitConfiguration.GIT_PATH.getCurrentValue());
+            this.registerShutdown(path);
             if (!path.exists()){
                 path.mkdirs();
                 try {
                     CloneCommand cloneCommand = this.getCloneCommand(root, path);
                     cloneCommand.call();
                 } catch (GitAPIException e) {
-                    throw new IOException("Unable to clone repository: " + root);
+                    throw new IOException(e.getMessage());
                 }
             } else {
                 Git.open(path).pull();
@@ -96,5 +99,19 @@ public class GitPathHandler extends AbstractPathHandler {
         }
 
         return cloneCommand;
+    }
+
+    private void registerShutdown(File path) {
+        Runtime.getRuntime().addShutdownHook(
+            new Thread(
+                () -> {
+                    try {
+                        FileUtils.deleteDirectory(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            )
+        );
     }
 }
