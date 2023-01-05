@@ -55,11 +55,13 @@ public class GitPathHandler extends AbstractPathHandler {
                 try {
                     CloneCommand cloneCommand = this.getCloneCommand(root, path);
                     cloneCommand.call();
+                    Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository cloned: " + path);
                 } catch (GitAPIException e) {
                     throw new IOException(e.getMessage());
                 }
             } else {
                 Git.open(path).pull();
+                Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository updated: " + path);
             }
             Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Return DirectoryResourceAccessor for root path " + path);
             return new DirectoryResourceAccessor(path);
