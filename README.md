@@ -1,4 +1,4 @@
-# Liquibase Git Extension
+# Liquibase Git Resource
 
 ## Supported product editions
 <a href="https://www.liquibase.com/download" target="_blank"><img alt="Liquibase Open Source" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmcred%2Fliquibase-header-footer%2Ffeature%2Fbadges%2Fbadges%2Fcommunity.json"></a>
@@ -12,7 +12,7 @@ The easiest way to install this extension is with `lpm` [liquibase package manag
 
 ```shell
 lpm update
-lpm add liquibase-git-extension
+lpm add liquibase-git-resource
 ```
 
 ## Setup

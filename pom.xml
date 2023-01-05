@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.liquibase.ext</groupId>
-    <artifactId>liquibase-git-extension</artifactId>
+    <artifactId>liquibase-git-resource</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
-    <name>Liquibase Git Extension</name>
+    <name>Liquibase Git Resource</name>
     <description>Enables liquibase to get files from git repositories</description>
     <url>https://docs.liquibase.com</url>
 
