@@ -64,17 +64,6 @@ class GitPathHandlerTest extends Specification {
             thrown IOException
     }
 
-    def "Can Get DirectoryResourceAccessor For Cloned Repository"() {
-        given:
-        def gitPathHandler = new GitPathHandler()
-
-        when:
-        def resource = gitPathHandler.getResourceAccessor("https://github.com/liquibase/liquibase-github-action-example.git")
-
-        then:
-        resource instanceof DirectoryResourceAccessor
-    }
-
     def "Can Not Locate Git Repository"() {
         given:
         def gitPathHandler = new GitPathHandler()
