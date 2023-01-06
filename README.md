@@ -1,4 +1,5 @@
 # Liquibase Git Resource
+Liquibase extension to clone a remote Git repository and add it to the [Liquibase Search Path](https://docs.liquibase.com/concepts/changelogs/how-liquibase-finds-files.html).
 
 ## Supported product editions
 <a href="https://www.liquibase.com/download" target="_blank"><img alt="Liquibase Open Source" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmcred%2Fliquibase-header-footer%2Ffeature%2Fbadges%2Fbadges%2Fcommunity.json"></a>

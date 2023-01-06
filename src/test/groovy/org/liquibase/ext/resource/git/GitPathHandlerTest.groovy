@@ -1,7 +1,6 @@
 package org.liquibase.ext.resource.git
 
 import liquibase.plugin.Plugin
-import liquibase.resource.DirectoryResourceAccessor
 import spock.lang.Specification
 import spock.lang.Unroll
 import org.apache.commons.io.FileUtils;
@@ -55,13 +54,13 @@ class GitPathHandlerTest extends Specification {
 
     def "Can Not Clone Repository"() {
         given:
-            def gitPathHandler = new GitPathHandler()
+        def gitPathHandler = new GitPathHandler()
 
         when:
-            gitPathHandler.getResourceAccessor("ssh://host.xz/path/to/repo.git/")
+        gitPathHandler.getResourceAccessor("ssh://host.xz/path/to/repo.git/")
 
         then:
-            thrown IOException
+        thrown IOException
     }
 
     def "Can Not Locate Git Repository"() {

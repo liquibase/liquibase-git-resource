@@ -34,13 +34,6 @@ public class GitPathHandler extends AbstractPathHandler {
         return PRIORITY_SPECIALIZED;
     }
 
-    private boolean isGitPathValid(String root) {
-        // https://www.debuggex.com/r/H4kRw1G0YPyBFjfm
-        Pattern pattern = Pattern.compile("((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)(/)?");
-        Matcher matcher = pattern.matcher(root);
-        return matcher.find();
-    }
-
     @Override
     public ResourceAccessor getResourceAccessor(String root) throws IOException {
         //todo ensure exception breaks workflow instead of being severe only
@@ -77,6 +70,13 @@ public class GitPathHandler extends AbstractPathHandler {
     @Override
     public OutputStream createResource(String path) throws IOException {
         return Files.newOutputStream(Paths.get(path), StandardOpenOption.CREATE_NEW);
+    }
+
+    private boolean isGitPathValid(String root) {
+        // https://www.debuggex.com/r/H4kRw1G0YPyBFjfm
+        Pattern pattern = Pattern.compile("((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)(/)?");
+        Matcher matcher = pattern.matcher(root);
+        return matcher.find();
     }
 
     private boolean hasGitCredentials(String username, String password) throws IOException {
