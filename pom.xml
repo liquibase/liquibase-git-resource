@@ -5,7 +5,7 @@
 
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-git-resource</artifactId>
-    <version>0.0.1</version>
+    <version>0.1.0</version>
     <packaging>jar</packaging>
 
     <name>Liquibase Git Resource</name>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>6.4.0.202211300538-r</version>
+            <version>5.13.1.202206130422-r</version>
         </dependency>
         <dependency>
             <groupId>org.spockframework</groupId>
@@ -101,6 +101,23 @@
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <reportFormat>plain</reportFormat>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <reportFormat>plain</reportFormat>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
