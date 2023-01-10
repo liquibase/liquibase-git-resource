@@ -23,4 +23,15 @@ class GitPathHandlerIT extends Specification {
         resource instanceof DirectoryResourceAccessor
     }
 
+
+    def "Can Clone Private Repository"() {
+        given:
+        def gitPathHandler = new GitPathHandler()
+
+        when:
+        def resource = gitPathHandler.getResourceAccessor("https://github.com/liquibase/hashicorp-vault-plugin.git")
+
+        then:
+        resource instanceof DirectoryResourceAccessor
+    }
 }
