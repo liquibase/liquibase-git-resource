@@ -57,6 +57,7 @@ public class GitPathHandler extends AbstractPathHandler {
                 try {
                     PullCommand pull = Git.open(path).pull();
                     pull.call();
+                    Git.shutdown();
                 } catch (GitAPIException e) {
                     throw new IOException(e.getMessage());
                 }
