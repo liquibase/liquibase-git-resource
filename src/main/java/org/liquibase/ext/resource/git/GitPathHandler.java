@@ -41,7 +41,7 @@ public class GitPathHandler extends AbstractPathHandler {
         if (root != null && isGitPathValid(root)) {
             File path = new File(GitConfiguration.GIT_PATH.getCurrentValue());
             Boolean cleanup = GitConfiguration.GIT_CLEANUP.getCurrentValue();
-            if (cleanup) {
+            if (Boolean.TRUE.equals(cleanup)) {
                 this.registerShutdown(path);
             }
             if (!path.exists()){
