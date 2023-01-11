@@ -4,6 +4,7 @@ import liquibase.Scope;
 import liquibase.resource.*;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.apache.commons.io.FileUtils;
@@ -53,7 +54,12 @@ public class GitPathHandler extends AbstractPathHandler {
                     throw new IOException(e.getMessage());
                 }
             } else {
-                Git.open(path).pull();
+                PullCommand pull = Git.open(path).pull();
+                try {
+                    pull.call();
+                } catch (GitAPIException e) {
+                    throw new IOException(e.getMessage());
+                }
                 Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository updated: " + path);
             }
             Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Return DirectoryResourceAccessor for root path " + path);
@@ -80,11 +86,11 @@ public class GitPathHandler extends AbstractPathHandler {
     }
 
     private boolean hasGitCredentials(String username, String password) throws IOException {
-        if ((username != "" && Objects.equals(password, "")) || (Objects.equals(username, "") && password !=  "")) {
-            throw new IOException("Username and Password are both required for Git Credentials.");
-        }
-        if (username == null && password == null) {
+        if (username == null || password == null) {
             return false;
+        }
+        if ((username.equals("") && !password.equals("")) || (password.equals("") && !username.equals(""))) {
+            throw new IOException("Username and Password are both required for Git Credentials.");
         }
         return true;
     }
@@ -99,7 +105,7 @@ public class GitPathHandler extends AbstractPathHandler {
         if (this.hasGitCredentials(username, password)) {
             cloneCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password));
         }
-        if (branch != null && branch != "") {
+        if (branch != null && !branch.equals("")) {
             cloneCommand.setBranch(branch);
         }
 
