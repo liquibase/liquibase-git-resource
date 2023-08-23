@@ -23,7 +23,7 @@ If a valid [Git URL](https://www.git-scm.com/docs/git-clone#_git_urls) is added 
 ### Optional parameters
 ```
 --git-branch=PARAM
-    Git branch to clone into git.path
+    Git branch to clone into git.path.  Can be specified as ref name (refs/heads/main), branch name (main) or tag name (v1.2.3)
     (liquibase.git.branch)
     (LIQUIBASE_GIT_BRANCH)
     [deprecated: --gitBranch]
