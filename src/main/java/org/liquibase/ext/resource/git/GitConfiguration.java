@@ -28,7 +28,7 @@ public class GitConfiguration implements AutoloadedConfigurations {
                 .build();
         GIT_BRANCH = builder.define("branch", String.class)
                 .addAliasKey("git.branch")
-                .setDescription("Git branch to clone into git.path")
+                .setDescription("Git branch to clone into git.path. Can be specified as ref name (refs/heads/main), branch name (main) or tag name (v1.2.3)")
                 .build();
         GIT_CLEANUP = builder.define("cleanup", Boolean.class)
                 .addAliasKey("git.cleanup")
