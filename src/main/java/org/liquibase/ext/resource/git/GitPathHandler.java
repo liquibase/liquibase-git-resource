@@ -6,6 +6,8 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.RepositoryBuilder;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.apache.commons.io.FileUtils;
 
@@ -43,24 +45,25 @@ public class GitPathHandler extends AbstractPathHandler {
             if (Boolean.TRUE.equals(cleanup)) {
                 this.registerShutdown(path);
             }
-            if (!path.exists()){
+            if (!path.exists()) {
                 path.mkdirs();
-                try {
-                    CloneCommand cloneCommand = this.getCloneCommand(root, path);
-                    cloneCommand.call();
-                    Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository cloned: " + path);
-                } catch (GitAPIException e) {
-                    throw new IOException(e.getMessage());
-                }
-            } else {
-                try {
+            }
+            try {
+                RepositoryBuilder repositoryBuilder = new RepositoryBuilder().setGitDir(path);
+                Repository repository = repositoryBuilder.build();
+                if (repository.getObjectDatabase().exists()) {
                     PullCommand pull = Git.open(path).pull();
                     pull.call();
                     Git.shutdown();
-                } catch (GitAPIException e) {
-                    throw new IOException(e.getMessage());
+                    Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository updated: " + path);
+                } else {
+                    CloneCommand cloneCommand = this.getCloneCommand(root, path);
+                    cloneCommand.call();
+                    Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository cloned: " + path);
                 }
-                Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository updated: " + path);
+                repository.close();
+            } catch (GitAPIException e) {
+                throw new IOException(e.getMessage());
             }
             Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Return DirectoryResourceAccessor for root path " + path);
             return new DirectoryResourceAccessor(path);
