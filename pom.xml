@@ -3,6 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-parent-pom</artifactId>
+        <version>0.1.0</version> <!-- Replace with the desired version -->
+    </parent>
+
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-git-resource</artifactId>
     <version>0.1.2</version>
@@ -11,13 +17,6 @@
     <name>Liquibase Git Resource</name>
     <description>Enables liquibase to get files from git repositories</description>
     <url>https://docs.liquibase.com</url>
-
-    <licenses>
-        <license>
-            <name>Liquibase EULA</name>
-            <url>https://www.liquibase.com/eula</url>
-        </license>
-    </licenses>
 
     <developers>
         <developer>
@@ -28,33 +27,11 @@
         </developer>
     </developers>
 
-    <scm>
-        <connection>scm:git:git://github.com/liquibase/hashicorp-vault-plugin.git</connection>
-        <developerConnection>scm:git:ssh://github.com:liquibase/hashicorp-vault-plugin.git</developerConnection>
-        <url>http://github.com/liquibase/hashicorp-vault-plugin</url>
-    </scm>
-
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <sonar.organization>liquibase</sonar.organization>
-        <sonar.projectKey>${project.artifactId}</sonar.projectKey>
-        <sonar.projectName>${project.name}</sonar.projectName>
-        <sonar.projectDescription>${project.description}</sonar.projectDescription>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.scm.provider>git</sonar.scm.provider>
-        <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
-        <sonar.sources>src/main/java</sonar.sources>
-        <sonar.tests>src/test/groovy</sonar.tests>
+        <liquibase.version>4.23.0</liquibase.version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <version>4.23.0</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
@@ -72,202 +49,4 @@
             <version>2.11.0</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <optimize>true</optimize>
-                    <debug>true</debug>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
-                <configuration>
-                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                    <reportFormat>plain</reportFormat>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.22.2</version>
-                <configuration>
-                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                    <reportFormat>plain</reportFormat>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.8</version>
-                <configuration>
-                    <fileSets>
-                        <fileSet>
-                            <directory>target</directory>
-                            <includes>
-                                <include>**/jacoco.exec</include>
-                            </includes>
-                        </fileSet>
-                    </fileSets>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <id>build-javadoc-jar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>javadoc</classifier>
-                            <classesDirectory>${project.basedir}</classesDirectory>
-                            <includes>
-                                <include>readme.javadocs.txt</include>
-                            </includes>
-                            <archive>
-                                <addMavenDescriptor>false</addMavenDescriptor>
-                            </archive>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>build-sources-jar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>sources</classifier>
-                            <classesDirectory>${project.basedir}</classesDirectory>
-                            <includes>
-                                <include>readme.sources.txt</include>
-                            </includes>
-                            <archive>
-                                <addMavenDescriptor>false</addMavenDescriptor>
-                            </archive>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.gmavenplus</groupId>
-                <artifactId>gmavenplus-plugin</artifactId>
-                <version>1.13.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>addSources</goal>
-                            <goal>addTestSources</goal>
-                            <goal>compile</goal>
-                            <goal>compileTests</goal>
-                            <goal>removeStubs</goal>
-                            <goal>removeTestStubs</goal>
-                        </goals>
-                        <!--Runs standard tests and CommandTests which require liquibase-extension-testing-->
-                        <configuration>
-                            <testSources>
-                                <testSource>
-                                    <directory>${project.basedir}/src/test/</directory>
-                                    <includes>
-                                        <include>**/**.groovy</include>
-                                    </includes>
-                                </testSource>
-                            </testSources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>com.coderplus.maven.plugins</groupId>
-                <artifactId>copy-rename-maven-plugin</artifactId>
-                <version>1.0.1</version>
-                <executions>
-                    <execution>
-                        <id>copy</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <fileSets>
-                                <fileSet>
-                                    <sourceFile>${project.basedir}/pom.xml</sourceFile>
-                                    <destinationFile>${project.basedir}/target/${project.artifactId}-${project.version}.pom</destinationFile>
-                                </fileSet>
-                            </fileSets>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.2</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                            </transformers>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <filters>
-                                <filter>
-                                    <!-- filter out signature files from signed dependencies, else repackaging fails with security ex -->
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.9.1.2184</version>
-            </plugin>
-
-        </plugins>
-
-    </build>
-
 </project>
