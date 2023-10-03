@@ -28,7 +28,7 @@
     </developers>
 
     <properties>
-        <liquibase.version>4.23.0</liquibase.version>
+        <liquibase.version>4.23.2</liquibase.version>
         <groovy-all.version>2.4.15</groovy-all.version>
     </properties>
 
