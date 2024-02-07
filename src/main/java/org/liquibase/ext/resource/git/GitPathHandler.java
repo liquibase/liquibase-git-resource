@@ -63,7 +63,6 @@ public class GitPathHandler extends AbstractPathHandler {
                     } else {
                         git.pull().call();
                     }
-                    Git.shutdown();
                     Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository updated: " + path);
                 } else {
                     CloneCommand cloneCommand = this.getCloneCommand(root, path, branch);
@@ -72,6 +71,8 @@ public class GitPathHandler extends AbstractPathHandler {
                 }
             } catch (GitAPIException | JGitInternalException e) {
                 throw new IOException(e.getMessage());
+            } finally {
+                Git.shutdown();
             }
             Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Return DirectoryResourceAccessor for root path " + path);
             return new DirectoryResourceAccessor(path);
