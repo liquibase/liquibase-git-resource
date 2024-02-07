@@ -6,6 +6,7 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryBuilder;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -41,7 +42,10 @@ public class GitPathHandler extends AbstractPathHandler {
         //todo ensure exception breaks workflow instead of being severe only
         if (root != null && isGitPathValid(root)) {
             File path = new File(GitConfiguration.GIT_PATH.getCurrentValue());
+            File gitPath = new File(path, ".git");
             Boolean cleanup = GitConfiguration.GIT_CLEANUP.getCurrentValue();
+            String branch = GitConfiguration.GIT_BRANCH.getCurrentValue();
+
             if (Boolean.TRUE.equals(cleanup)) {
                 this.registerShutdown(path);
             }
@@ -49,20 +53,24 @@ public class GitPathHandler extends AbstractPathHandler {
                 path.mkdirs();
             }
             try {
-                RepositoryBuilder repositoryBuilder = new RepositoryBuilder().setGitDir(path);
+                RepositoryBuilder repositoryBuilder = new RepositoryBuilder().setGitDir(gitPath);
                 Repository repository = repositoryBuilder.build();
                 if (repository.getObjectDatabase().exists()) {
-                    PullCommand pull = Git.open(path).pull();
-                    pull.call();
+                    repository.close();
+                    Git git = Git.open(path);
+                    if (branch != null && !branch.isEmpty()) {
+                        git.checkout().setName(branch).call();
+                    } else {
+                        git.pull().call();
+                    }
                     Git.shutdown();
                     Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository updated: " + path);
                 } else {
-                    CloneCommand cloneCommand = this.getCloneCommand(root, path);
+                    CloneCommand cloneCommand = this.getCloneCommand(root, path, branch);
                     cloneCommand.call();
                     Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository cloned: " + path);
                 }
-                repository.close();
-            } catch (GitAPIException e) {
+            } catch (GitAPIException | JGitInternalException e) {
                 throw new IOException(e.getMessage());
             }
             Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Return DirectoryResourceAccessor for root path " + path);
@@ -98,10 +106,9 @@ public class GitPathHandler extends AbstractPathHandler {
         return true;
     }
 
-    private CloneCommand getCloneCommand(String root, File path) throws IOException {
+    private CloneCommand getCloneCommand(String root, File path, String branch) throws IOException {
         String username = GitConfiguration.GIT_USERNAME.getCurrentValue();
         String password = GitConfiguration.GIT_PASSWORD.getCurrentValue();
-        String branch = GitConfiguration.GIT_BRANCH.getCurrentValue();
 
         CloneCommand cloneCommand = Git.cloneRepository().setURI(root);
         cloneCommand.setDirectory(path);
