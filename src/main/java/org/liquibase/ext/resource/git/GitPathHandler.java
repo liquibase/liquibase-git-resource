@@ -52,11 +52,11 @@ public class GitPathHandler extends AbstractPathHandler {
             if (!path.exists()) {
                 path.mkdirs();
             }
+            Repository repository = null;
             try {
                 RepositoryBuilder repositoryBuilder = new RepositoryBuilder().setGitDir(gitPath);
-                Repository repository = repositoryBuilder.build();
+                repository = repositoryBuilder.build();
                 if (repository.getObjectDatabase().exists()) {
-                    repository.close();
                     Git git = Git.open(path);
                     if (branch != null && !branch.isEmpty()) {
                         git.checkout().setName(branch).call();
@@ -72,6 +72,7 @@ public class GitPathHandler extends AbstractPathHandler {
             } catch (GitAPIException | JGitInternalException e) {
                 throw new IOException(e.getMessage());
             } finally {
+                repository.close();
                 Git.shutdown();
             }
             Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Return DirectoryResourceAccessor for root path " + path);
