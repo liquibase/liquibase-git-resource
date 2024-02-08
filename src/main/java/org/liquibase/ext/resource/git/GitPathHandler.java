@@ -72,7 +72,9 @@ public class GitPathHandler extends AbstractPathHandler {
             } catch (GitAPIException | JGitInternalException e) {
                 throw new IOException(e.getMessage());
             } finally {
-                repository.close();
+                if (repository != null) {
+                    repository.close();
+                }
                 Git.shutdown();
             }
             Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Return DirectoryResourceAccessor for root path " + path);
