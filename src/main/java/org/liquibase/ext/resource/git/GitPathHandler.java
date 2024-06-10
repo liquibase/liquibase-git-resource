@@ -52,18 +52,16 @@ public class GitPathHandler extends AbstractPathHandler {
             if (!path.exists()) {
                 path.mkdirs();
             }
-            Repository repository = null;
-            try {
-                RepositoryBuilder repositoryBuilder = new RepositoryBuilder().setGitDir(gitPath);
-                repository = repositoryBuilder.build();
+            try (Repository repository = new RepositoryBuilder().setGitDir(gitPath).build()) {
                 if (repository.getObjectDatabase().exists()) {
-                    Git git = Git.open(path);
-                    if (branch != null && !branch.isEmpty()) {
-                        git.checkout().setName(branch).call();
-                    } else {
-                        git.pull().call();
+                    try (Git git = Git.open(path)) {
+                        if (branch != null && !branch.isEmpty()) {
+                            git.checkout().setName(branch).call();
+                        } else {
+                            git.pull().call();
+                        }
+                        Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository updated: " + path);
                     }
-                    Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository updated: " + path);
                 } else {
                     CloneCommand cloneCommand = this.getCloneCommand(root, path, branch);
                     cloneCommand.call();
@@ -71,11 +69,6 @@ public class GitPathHandler extends AbstractPathHandler {
                 }
             } catch (GitAPIException | JGitInternalException e) {
                 throw new IOException(e.getMessage());
-            } finally {
-                if (repository != null) {
-                    repository.close();
-                }
-                Git.shutdown();
             }
             Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Return DirectoryResourceAccessor for root path " + path);
             return new DirectoryResourceAccessor(path);
