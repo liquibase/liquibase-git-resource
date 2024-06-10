@@ -2,6 +2,7 @@ package org.liquibase.ext.resource.git;
 
 import liquibase.configuration.AutoloadedConfigurations;
 import liquibase.configuration.ConfigurationDefinition;
+import liquibase.configuration.ConfigurationValueObfuscator;
 
 public class GitConfiguration implements AutoloadedConfigurations {
 
@@ -20,6 +21,7 @@ public class GitConfiguration implements AutoloadedConfigurations {
         GIT_PASSWORD = builder.define("password", String.class)
                 .addAliasKey("git.password")
                 .setDescription("Git password for searchPath repository URL")
+                .setValueObfuscator(ConfigurationValueObfuscator.STANDARD)
                 .build();
         GIT_PATH = builder.define("path", String.class)
                 .addAliasKey("git.path")
