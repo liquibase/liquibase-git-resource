@@ -49,9 +49,11 @@ public class GitPathHandler extends AbstractPathHandler {
             if (Boolean.TRUE.equals(cleanup)) {
                 this.registerShutdown(path);
             }
+            
             if (!path.exists()) {
                 path.mkdirs();
             }
+
             try (Repository repository = new RepositoryBuilder().setGitDir(gitPath).build()) {
                 if (repository.getObjectDatabase().exists()) {
                     try (Git git = Git.open(path)) {
