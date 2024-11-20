@@ -49,9 +49,11 @@ public class GitPathHandler extends AbstractPathHandler {
             if (Boolean.TRUE.equals(cleanup)) {
                 this.registerShutdown(path);
             }
+            
             if (!path.exists()) {
                 path.mkdirs();
             }
+
             try (Repository repository = new RepositoryBuilder().setGitDir(gitPath).build()) {
                 if (repository.getObjectDatabase().exists()) {
                     try (Git git = Git.open(path)) {
@@ -87,8 +89,8 @@ public class GitPathHandler extends AbstractPathHandler {
     }
 
     private boolean isGitPathValid(String root) {
-        // https://www.debuggex.com/r/H4kRw1G0YPyBFjfm
-        Pattern pattern = Pattern.compile("((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)(/)?");
+        // Updated regex to make .git optional
+        Pattern pattern = Pattern.compile("((git|ssh|http(s)?)|(git@[\\w\\.]+))(:(//)?)([\\w\\.@\\:/\\-~]+)(\\.git)?(/)?");
         Matcher matcher = pattern.matcher(root);
         return matcher.find();
     }
