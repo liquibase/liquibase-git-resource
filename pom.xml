@@ -28,7 +28,7 @@
 
     <properties>
         <liquibase.version>4.24.0</liquibase.version>
-        <groovy-all.version>2.4.15</groovy-all.version>
+<!--        <groovy-all.version>2.4.15</groovy-all.version>-->
         <sonar.tests>src/test/groovy</sonar.tests>
     </properties>
 
@@ -51,23 +51,23 @@
             <version>2.3-groovy-4.0</version>
             <scope>test</scope>
         </dependency>
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>1.3.2</version>
-      </dependency>
-      <dependency>
-        <groupId>com.athaydes</groupId>
-        <artifactId>spock-reports</artifactId>
-        <version>2.5.1-groovy-4.0</version>
-        <scope>test</scope>
-        <!-- this avoids affecting your version of Groovy/Spock -->
-        <exclusions>
-            <exclusion>
-                <groupId>*</groupId>
-                <artifactId>*</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.athaydes</groupId>
+            <artifactId>spock-reports</artifactId>
+            <version>2.5.1-groovy-4.0</version>
+            <scope>test</scope>
+            <!-- this avoids affecting your version of Groovy/Spock -->
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 </project>
