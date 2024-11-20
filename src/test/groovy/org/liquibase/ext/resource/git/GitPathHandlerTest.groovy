@@ -38,6 +38,7 @@ class GitPathHandlerTest extends Specification {
         "git://host.xz/~user/path/to/repo.git/"         | Plugin.PRIORITY_SPECIALIZED
         "http://host.xz/path/to/repo.git/"              | Plugin.PRIORITY_SPECIALIZED
         "https://host.xz/path/to/repo.git/"             | Plugin.PRIORITY_SPECIALIZED
+        "https://dev.azure.com/molivas-pipelines/_git/DEMO_LBIO" | Plugin.PRIORITY_SPECIALIZED
         "/path/to/repo.git/"                            | Plugin.PRIORITY_NOT_APPLICABLE
         "path/to/repo.git/"                             | Plugin.PRIORITY_NOT_APPLICABLE
         "~/path/to/repo.git"                            | Plugin.PRIORITY_NOT_APPLICABLE
