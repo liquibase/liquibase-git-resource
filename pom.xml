@@ -28,7 +28,8 @@
 
     <properties>
         <liquibase.version>4.24.0</liquibase.version>
-        <junit.version>4.13.2</junit.version>
+        <junit.version>5.11.3</junit.version>
+        <junit-platform.version>1.11.3</junit-platform.version>
         <sonar.tests>src/test/groovy</sonar.tests>
     </properties>
 
@@ -56,47 +57,36 @@
             <artifactId>org.eclipse.jgit</artifactId>
             <version>6.6.1.202309021850-r</version>
         </dependency>
+                <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <version>${junit-platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit-platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                    <reportFormat>plain</reportFormat>
-                    <systemPropertyVariables>
-                        <com.athaydes.spockframework.report.outputDir>${project.build.directory}/spock-reports</com.athaydes.spockframework.report.outputDir>
-                    </systemPropertyVariables>
-                </configuration>
-                <dependencies>
-                    <!-- Force using the latest JUnit 47 provider -->
-                    <dependency>
-                      <groupId>org.apache.maven.surefire</groupId>
-                      <artifactId>surefire-junit47</artifactId>
-                      <version>${maven-surefire-plugin.version}</version>
-                    </dependency>
-                  </dependencies>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${maven-failsafe-plugin.version}</version>
-                <configuration>
-                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                    <reportFormat>plain</reportFormat>
-                    <systemPropertyVariables>
-                        <com.athaydes.spockframework.report.outputDir>${project.build.directory}/spock-reports</com.athaydes.spockframework.report.outputDir>
-                    </systemPropertyVariables>
-                </configuration>
-                <dependencies>
-                    <!-- Force using the latest JUnit 47 provider -->
-                    <dependency>
-                      <groupId>org.apache.maven.surefire</groupId>
-                      <artifactId>surefire-junit47</artifactId>
-                      <version>${maven-surefire-plugin.version}</version>
-                    </dependency>
-                  </dependencies>
-            </plugin>
-        </plugins>
-    </build>
+
 </project>
