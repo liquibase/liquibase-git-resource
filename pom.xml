@@ -28,7 +28,6 @@
 
     <properties>
         <liquibase.version>4.24.0</liquibase.version>
-        <groovy-all.version>2.4.15</groovy-all.version>
         <sonar.tests>src/test/groovy</sonar.tests>
     </properties>
 
