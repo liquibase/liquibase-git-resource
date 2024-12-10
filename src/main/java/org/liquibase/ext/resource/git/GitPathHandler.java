@@ -65,9 +65,9 @@ public class GitPathHandler extends AbstractPathHandler {
                         Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository updated: " + path);
                     }
                 } else {
-                    CloneCommand cloneCommand = this.getCloneCommand(root, path, branch);
-                    cloneCommand.call();
-                    Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository cloned: " + path);
+                    try (Git git = this.getCloneCommand(root, path, branch).call()) {
+                        Scope.getCurrentScope().getLog(GitPathHandler.class).fine("Repository cloned: " + path);
+                    }
                 }
             } catch (GitAPIException | JGitInternalException e) {
                 throw new IOException(e.getMessage());
