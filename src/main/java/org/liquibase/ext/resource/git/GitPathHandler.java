@@ -19,6 +19,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -123,15 +125,48 @@ public class GitPathHandler extends AbstractPathHandler {
 
     private void registerShutdown(File path) {
         Runtime.getRuntime().addShutdownHook(
-            new Thread(
-                () -> {
-                    try {
-                        FileUtils.deleteDirectory(path);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+            new Thread(() -> {
+                try {
+                    retryDeleteDirectory(path, 5, 1); // Retry 5 times with 1-second intervals
+                } catch (IOException e) {
+                    System.err.println("Failed to delete directory: " + e.getMessage());
                 }
-            )
+            })
         );
+    }
+
+    //AI
+    private void retryDeleteDirectory(File path, int retries, int delaySeconds) throws IOException {
+        for (int i = 0; i < retries; i++) {
+            try {
+                makeWritable(path); // Ensure all files are writable
+                FileUtils.deleteDirectory(path);
+                System.out.println("Directory deleted successfully.");
+                return; // Success
+            } catch (IOException e) {
+                System.err.println("Attempt " + (i + 1) + " to delete directory failed: " + e.getMessage());
+                if (i == retries - 1) {
+                    throw e; // Fail after max retries
+                }
+                try {
+                    TimeUnit.SECONDS.sleep(delaySeconds); // Wait before retrying
+                } catch (InterruptedException ignored) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+    }
+
+    //AI
+    private void makeWritable(File file) {
+        if (file.isFile()) {
+            if (!file.setWritable(true)) {
+                System.err.println("Failed to set writable: " + file);
+            }
+        } else if (file.isDirectory()) {
+            for (File child : Objects.requireNonNull(file.listFiles())) {
+                makeWritable(child); // Recursively make children writable
+            }
+        }
     }
 }
