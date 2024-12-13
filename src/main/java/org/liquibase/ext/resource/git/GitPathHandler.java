@@ -108,7 +108,8 @@ public class GitPathHandler extends AbstractPathHandler {
     private CloneCommand getCloneCommand(String root, File path, String branch) throws IOException {
         String username = GitConfiguration.GIT_USERNAME.getCurrentValue();
         String password = GitConfiguration.GIT_PASSWORD.getCurrentValue();
-
+        Integer depth = GitConfiguration.GIT_FETCH_DEPTH.getCurrentValue();
+        
         CloneCommand cloneCommand = Git.cloneRepository().setURI(root);
         cloneCommand.setDirectory(path);
         if (this.hasGitCredentials(username, password)) {
@@ -116,6 +117,9 @@ public class GitPathHandler extends AbstractPathHandler {
         }
         if (branch != null && !branch.equals("")) {
             cloneCommand.setBranch(branch);
+        }
+        if (depth != null && depth > 0) {
+            cloneCommand.setDepth(depth);
         }
 
         return cloneCommand;
