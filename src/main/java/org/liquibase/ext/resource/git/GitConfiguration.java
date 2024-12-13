@@ -11,6 +11,7 @@ public class GitConfiguration implements AutoloadedConfigurations {
     public static final ConfigurationDefinition<String> GIT_PATH;
     public static final ConfigurationDefinition<String> GIT_BRANCH;
     public static final ConfigurationDefinition<Boolean> GIT_CLEANUP;
+    public static final ConfigurationDefinition<Integer> GIT_FETCH_DEPTH;
 
     static {
         ConfigurationDefinition.Builder builder = new ConfigurationDefinition.Builder("liquibase.git");
@@ -36,6 +37,10 @@ public class GitConfiguration implements AutoloadedConfigurations {
                 .addAliasKey("git.cleanup")
                 .setDescription("Remove local repository path after run")
                 .setDefaultValue(true)
+                .build();
+        GIT_FETCH_DEPTH = builder.define("fetch_depth", Integer.class)
+                .addAliasKey("git.fetch_depth")
+                .setDescription("Creates a shallow clone with a history truncated to the specified number of commits")
                 .build();
     }
 
