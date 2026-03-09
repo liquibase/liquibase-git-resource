@@ -14,7 +14,7 @@ jobs:
     secrets: inherit
     with:
       java: "[11, 17, 18]"
-      os: '["ubuntu-latest", "windows-latest"]'
+      os: '["ubuntu-latest", "blacksmith-2vcpu-windows-2025"]'
 
   dependabot-automerge:
     needs: build-test
